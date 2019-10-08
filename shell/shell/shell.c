@@ -15,6 +15,7 @@ void mainLoop (void)
 		arguments = parseLine(line);
 		state = execCommand(arguments);
 		
+		
 	}
 	while (state);
 	
@@ -37,7 +38,24 @@ char ** parseLine(char * line)
 		argv[index] = token;
 		index++;
 	}
+	while (index <= MAX_ARGS)
+	{
+		argv[index] = NULL;
+		index ++;
+	}
 	return argv;
+}
+char * getLastArg(char ** arguments)
+{
+	char * arg;
+	int i =0;
+	arg = arguments[i];
+	while (arg != NULL)
+	{
+		i++;
+		arg = arguments[i];
+	}
+	return arguments[i-1];
 }
 
 int createProcess(char ** arguments)
@@ -48,7 +66,7 @@ int createProcess(char ** arguments)
 	if (pid == 0)
 	{
 		//child process
-		printf("I'm a child");
+		//printf("I'm a child");
 		execvp(arguments[0] , arguments );
 		
 	}
@@ -62,7 +80,7 @@ int createProcess(char ** arguments)
 				waitPid = waitpid(pid, &state, WUNTRACED);
 			}
 		while(!WIFEXITED(state) && !WIFSIGNALED(state));
-		printf("I'm the parent");
+	//	printf("I'm the parent");
 
 	}
 	return 1;
@@ -73,7 +91,10 @@ int createProcess(char ** arguments)
 int execCommand( char ** arguments)
 {
 	int x;
-	if (!strcmp(arguments[0],"exit"))
+	if (!strcmp(arguments[0], ""))
+		x=1;
+	
+	else if  (!strcmp(arguments[0],"exit"))
 		x = exitCommand();
 	else
 		x= createProcess(arguments);
