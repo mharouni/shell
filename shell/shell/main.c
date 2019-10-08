@@ -10,7 +10,6 @@
 #include "shell.h"
 
 int main(int argc, const char * argv[]) {
-	// insert code here...
-	printf("Hello, World!\n");
+	mainLoop();
 	return 0;
 }

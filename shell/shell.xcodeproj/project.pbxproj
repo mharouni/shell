@@ -93,7 +93,7 @@
 		1DDF3F9E2346151400A60715 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1030;
+				LastUpgradeCheck = 1100;
 				ORGANIZATIONNAME = "Mohamed Harouni";
 				TargetAttributes = {
 					1DDF3FA52346151400A60715 = {
@@ -107,6 +107,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 1DDF3F9D2346151400A60715;
 			productRefGroup = 1DDF3FA72346151400A60715 /* Products */;
@@ -245,6 +246,7 @@
 		1DDF3FAE2346151400A60715 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U96GCK7DMW;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -254,6 +256,7 @@
 		1DDF3FAF2346151400A60715 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U96GCK7DMW;
 				PRODUCT_NAME = "$(TARGET_NAME)";
