@@ -13,11 +13,14 @@ void mainLoop (void)
 		printf("shell >> ");
 		line = readLine();
 		arguments = parseLine(line);
+	//	printf("%s",**arguments);
 		state = execCommand(arguments);
-		
-		
+		free(line);
+	 	free(arguments);
 	}
 	while (state);
+//free(line);
+//free(argumrnts);
 	
 }
 char * readLine(void)
@@ -60,7 +63,7 @@ char * getLastArg(char ** arguments)
 
 int createProcess(char ** arguments)
 {
-	pid_t pid, waitPid ;
+	pid_t pid, childPid, asyncPid ;
 	int state;
 	pid = fork();
 	if (pid == 0)
@@ -75,13 +78,20 @@ int createProcess(char ** arguments)
 	}
 	else
 	{
-		do
-			{
-				waitPid = waitpid(pid, &state, WUNTRACED);
-			}
-		while(!WIFEXITED(state) && !WIFSIGNALED(state));
-	//	printf("I'm the parent");
+		if (!strcmp(getLastArg(arguments), "&"))
+		{
+			asyncPid = waitpid(pid, &state, WNOHANG);
+		}
+		else
+		{
+			do
+				{
+					childPid = waitpid(pid, &state, WUNTRACED);
+				}
+			while(!WIFEXITED(state) && !WIFSIGNALED(state));
+		//	printf("I'm the parent");
 
+		}
 	}
 	return 1;
 }int exitCommand()
@@ -94,7 +104,7 @@ int execCommand( char ** arguments)
 	if (!strcmp(arguments[0], ""))
 		x=1;
 	
-	else if  (!strcmp(arguments[0],"exit"))
+	else if  (!strcmp(arguments[0],"/bin/exit"))
 		x = exitCommand();
 	else
 		x= createProcess(arguments);
