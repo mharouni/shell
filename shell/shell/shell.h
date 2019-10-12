@@ -10,5 +10,6 @@ char ** parseLine(char * line);
 int execCommand(char ** arguments);
 int exitCommand(void);
 char * getLastArg(char ** arguments);
+int lastIndex(char ** arguments);
 
 #endif //SHELL_H

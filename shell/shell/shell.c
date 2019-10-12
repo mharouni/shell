@@ -60,6 +60,18 @@ char * getLastArg(char ** arguments)
 	}
 	return arguments[i-1];
 }
+int lastIndex(char ** arguments)
+{
+		char * arg;
+		int i =0;
+		arg = arguments[i];
+		while (arg != NULL)
+		{
+			i++;
+			arg = arguments[i];
+		}
+		return i-1;
+}
 
 int createProcess(char ** arguments)
 {
@@ -68,6 +80,10 @@ int createProcess(char ** arguments)
 	pid = fork();
 	if (pid == 0)
 	{
+		if (!strcmp(getLastArg(arguments), "&"))
+		{
+			arguments[lastIndex(arguments)] = NULL;
+		}
 		//child process
 		//printf("I'm a child");
 		execvp(arguments[0] , arguments );
