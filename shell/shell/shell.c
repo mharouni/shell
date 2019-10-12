@@ -77,16 +77,19 @@ int createProcess(char ** arguments)
 {
 	pid_t pid, childPid, asyncPid ;
 	int state;
+	int background=0;
 	pid = fork();
 	if (pid == 0)
 	{
 		if (!strcmp(getLastArg(arguments), "&"))
 		{
+			background =1;
 			arguments[lastIndex(arguments)] = NULL;
 		}
+		else
 		//child process
 		//printf("I'm a child");
-		execvp(arguments[0] , arguments );
+			execvp(arguments[0] , arguments );
 		
 	}
 	else if (pid < 0){
@@ -94,7 +97,7 @@ int createProcess(char ** arguments)
 	}
 	else
 	{
-		if (!strcmp(getLastArg(arguments), "&"))
+		if (background)
 		{
 			asyncPid = waitpid(pid, &state, WNOHANG);
 		}
@@ -120,7 +123,7 @@ int execCommand( char ** arguments)
 	if (!strcmp(arguments[0], ""))
 		x=1;
 	
-	else if  (!strcmp(arguments[0],"/bin/exit"))
+	else if  (!strcmp(arguments[0],"exit"))
 		x = exitCommand();
 	else
 		x= createProcess(arguments);
