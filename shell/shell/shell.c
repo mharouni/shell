@@ -12,11 +12,14 @@ void mainLoop (void)
 	do {
 		printf("shell >> ");
 		line = readLine();
+		if(line == NULL)
+			continue;
 		arguments = parseLine(line);
 	//	printf("%s",**arguments);
 		state = execCommand(arguments);
 		free(line);
 	 	free(arguments);
+		fflush(stdin);
 	}
 	while (state);
 //free(line);
@@ -33,6 +36,7 @@ char * readLine(void)
 
 char ** parseLine(char * line)
 {
+	
 	char ** argv = malloc(MAX_ARGS * sizeof(char *));
 	int index = 0;
 	char * token;
@@ -75,21 +79,26 @@ int lastIndex(char ** arguments)
 
 int createProcess(char ** arguments)
 {
-	pid_t pid, childPid, asyncPid ;
+	FILE * file;
+	file = fopen("log.txt", "w");
+	fprintf(file, "PID\tSIGNUM\n");
+	fclose(file);
+	file = fopen("log.txt", "a");
+	
+	pid_t pid, childPid, asyncPid;
 	int state;
 	int background=0;
 	pid = fork();
+	if (!strcmp(getLastArg(arguments), "&"))
+	{
+		background =1;
+		arguments[lastIndex(arguments)] = NULL;
+		
+	}
+	
 	if (pid == 0)
 	{
-		if (!strcmp(getLastArg(arguments), "&"))
-		{
-			background =1;
-			arguments[lastIndex(arguments)] = NULL;
-		}
-		else
-		//child process
-		//printf("I'm a child");
-			execvp(arguments[0] , arguments );
+		execvp(arguments[0] , arguments );
 		
 	}
 	else if (pid < 0){
@@ -100,17 +109,22 @@ int createProcess(char ** arguments)
 		if (background)
 		{
 			asyncPid = waitpid(pid, &state, WNOHANG);
+			
 		}
 		else
 		{
-			do
-				{
+		do
+			{
 					childPid = waitpid(pid, &state, WUNTRACED);
-				}
+				printf("%d\n",state);
+			}
 			while(!WIFEXITED(state) && !WIFSIGNALED(state));
-		//	printf("I'm the parent");
-
+			
+		//
+			
+			
 		}
+		fprintf(file, "%d\t%d",childPid,state);
 	}
 	return 1;
 }int exitCommand()
