@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-FILE * file; // file pointer to initializse and write in the log file.
+FILE * file; // file pointer to initialise and write in the log file.
 void handleSignal(int sig)
 {
 	pid_t child;
